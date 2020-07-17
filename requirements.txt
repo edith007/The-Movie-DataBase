@@ -20,7 +20,6 @@ eventlet==0.25.2
 Flask==1.1.2
 Flask-Session==0.3.2
 Flask-SocketIO==1.0b1
-functools32==3.2.3.post2
 gevent==20.6.2
 gevent-websocket==0.10.1
 greenlet==0.4.16
