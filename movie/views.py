@@ -1,6 +1,5 @@
 from django.shortcuts import render
-import requests
-from bs4 import BeautifulSoup
+import urllib.request
 
 def home(request):
     return render(request, 'movie/home.html')
