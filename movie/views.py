@@ -1,5 +1,5 @@
 from django.shortcuts import render
-import requests
+import urllib.request
 from bs4 import BeautifulSoup
 
 def home(request):
