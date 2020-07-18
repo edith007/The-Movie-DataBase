@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,17 +8,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <link rel="stylesheet" type="text/css" href="{% static 'movie/main.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'tv/main.css' %}">
 
     {% if title %}
         <title>{{ title }}</title>
     {% else %}
-        <title>MovieWEB</title>
+        <title>Movie</title>
     {% endif %}
 </head>
-<body style="background-color:#14181c;">
+<body style="background-color:#14181c">
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
@@ -29,13 +29,28 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="{% url 'movie-home' %}">Home</a>
-              <a class="nav-item nav-link" href="{% url 'movie-search' %}">Search</a>
+                <form method="post" action="/search/" role="search" style="width: 50em">
+                    {% csrf_token %}
+    <div class="input-group">
+        <input type="text" class="form-control" name='query' placeholder="Search">
+        <div class="input-group-btn">
+            <button type="submit" class="btn btn-dark">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </div>
+</form>
             </div>
+
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
-              <a class="nav-item nav-link" href="#">Login</a>
-              <a class="nav-item nav-link" href="#">Register</a>
+                {% if user.is_authenticated %}
+                    <a class="nav-item nav-link" href="/profile/">My Profile</a>
+                    <a class="nav-item nav-link" href="/logout/">Logout</a>
+                {% else %}
+                    <a class="nav-item nav-link" href="/login/">Login</a>
+                    <a class="nav-item nav-link" href="/register/">Register</a>
+                {% endif %}
             </div>
           </div>
         </div>
@@ -44,6 +59,13 @@
     <main role="main" class="container">
       <div class="row">
         <div class="col-md-8">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
           {% block content %}{% endblock %}
         </div>
       </div>
@@ -54,5 +76,6 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 </body>
 </html>
