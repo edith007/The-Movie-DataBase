@@ -2,14 +2,12 @@ django>=2.2.13
 pillow>=6.2.2
 pytz==2019.1
 sqlparse==0.3.0
-<<<<<<< HEAD
 six>=1.11.0
 psycopg2==2.8.5
-=======
 django-crispy-forms==1.9.2
 psycopg2==2.7.1
 pyparsing==2.2.0
 six==1.10.0
 whitenoise==3.3.0
 gunicorn==19.7.1
->>>>>>> c25fd6b92691cf8cd78a33b0403c540f211ab251
+
