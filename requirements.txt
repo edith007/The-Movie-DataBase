@@ -3,3 +3,9 @@ pillow>=6.2.2
 pytz==2019.1
 sqlparse==0.3.0
 django-crispy-forms==1.9.2
+psycopg2==2.7.1
+pyparsing==2.2.0
+pytz==2017.2
+six==1.10.0
+whitenoise==3.3.0
+gunicorn==19.7.1
