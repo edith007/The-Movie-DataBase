@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect
-import urllib.request
+import requests
 from .models import Show, UserRating
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
+
 
 def home(request):
     return render(request, 'movie/home.html')
+
 
 def search(request, query: str = ""):
     if request.method == 'POST' and 'query' in request.POST:
@@ -20,13 +23,43 @@ def search(request, query: str = ""):
             if each["show"]["summary"]:
                 each["show"]["summary"] = BeautifulSoup(each["show"]["summary"], "lxml").text
             if not each["show"]["image"]:
-                each["show"]["image"] = {"original":"/static/movie/default.png"}
-
+                each["show"]["image"] = {"original": "/static/movie/default.png"}
         context = {
-            'results' : resp,
-            'query' : query
+            'results': resp,
+            'query': query
         }
         return render(request, 'movie/search.html', context)
+
+
+def showlist(request, username: str = ""):
+    if not username:
+        return redirect('movie-home')
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return redirect('movie-home')
+    sort_type = request.GET.get('sort')
+    if not sort_type or not sort_type.isdigit():
+        sort_type = 1
+    sort_type = int(sort_type)
+    if sort_type == 2:
+        results = UserRating.objects.filter(user=user).order_by('pk')
+    elif sort_type == 3:
+        results = UserRating.objects.filter(user=user).order_by('-rating')
+    elif sort_type == 4:
+        results = UserRating.objects.filter(user=user).order_by('rating')
+    else:
+        results = UserRating.objects.filter(user=user).order_by('-pk')
+    paginator = Paginator(results, 25)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    for result in page_obj:
+        result.show.genres = result.show.genres.split(",")
+    return render(request, 'movie/list.html', {'username': username,
+                                            'page_obj': page_obj,
+                                            'total': paginator.count,
+                                            'sort_type': sort_type})
+
 
 def show(request, showid: int = 0):
     if not showid:
@@ -69,7 +102,7 @@ def show(request, showid: int = 0):
                     ur.rating = value
                     ur.save()
                     return render(request, 'movie/show.html', {'show': resp, 'watched': True, 'rating': value,
-                                                                'position': ur.position})
+                                                            'position': ur.position})
             if "#" in request.POST:
                 try:
                     value = int(request.POST['#'])
@@ -84,15 +117,15 @@ def show(request, showid: int = 0):
                 ur = UserRating.objects.get(show=sh, user=request.user)
                 ur.position = value
                 ur.save()
-                return render(request, 'movie/show.html', {'show': tesp, 'watched': True, 'rating': ur.rating,
-                                                            'position': ur.position})
-        if not request.user.is_authenticated:
-            return render(request, 'movie/show.html', {'show': resp, "watched": False, "rating": 0})
+                return render(request, 'movie/show.html', {'show': resp, 'watched': True, 'rating': ur.rating,
+                                                        'position': ur.position})
 
-        try:
-            ur = UserRating.objects.get(show=Show.objects.get(showid=showid), user=request.user)
-            return render(request, 'movie/show.html', {'show': resp, 'watched':True, 'rating': ur.rating,
-                                                       'position': ur.position})
-        except UserRating.DoesNotExist:
-            return render(request, 'movie/show.html', {'show': resp, "watched": False, "rating": 0})
-                                                           
+    if not request.user.is_authenticated:
+        return render(request, 'movie/show.html', {'show': resp, "watched": False, "rating": 0})
+
+    try:
+        ur = UserRating.objects.get(show=Show.objects.get(showid=showid), user=request.user)
+        return render(request, 'movie/show.html', {'show': resp, 'watched': True, 'rating': ur.rating,
+                                                'position': ur.position})
+    except UserRating.DoesNotExist:
+        return render(request, 'movie/show.html', {'show': resp, "watched": False, "rating": 0})
