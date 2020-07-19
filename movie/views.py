@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 import urllib.request
 from random import shuffle
-from bs4 import BeautifulSoup
 from .models import Show, UserRating
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
