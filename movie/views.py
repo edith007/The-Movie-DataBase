@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 import urllib.request
 from random import shuffle
+from bs4 import BeautifulSoup
 from .models import Show, UserRating
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
@@ -10,7 +11,7 @@ from django.core.paginator import Paginator
 def home(request):
     shows = list(Show.objects.all())
     shuffle(shows)
-    return render(request, 'movie/home.html', {'shows': shows[:10]})
+    return render(request, 'movie/home.html', {'shows': shows[:5]})
 
 
 def about(request):
