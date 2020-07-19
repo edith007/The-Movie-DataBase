@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-import requests
+import urllib.request
 from .models import Show, UserRating
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
