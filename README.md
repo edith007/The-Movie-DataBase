@@ -8,6 +8,7 @@ Netifly is a website created using Python, Django to allow users to track TV sho
 - A profile page with info, top 5 shows, etc.
 
 ## Screenshots
-![](https://imgur.com/FFq3wbk)
-![](https://imgur.com/9Y5aT2G)
-![](https://imgur.com/XO07aI2)
+![](https://i.imgur.com/FFq3wbk.png)
+![](https://i.imgur.com/9Y5aT2G.png)
+![](https://i.imgur.com/XO07aI2.png)
+
